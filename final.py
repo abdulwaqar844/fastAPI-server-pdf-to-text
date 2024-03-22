@@ -6,21 +6,20 @@ from paddleocr import PaddleOCR
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
-from PIL import Image
 app = FastAPI()
 
-origins = [
-    "http://localhost",
-    "http://localhost:3000",  # Replace with the address of your React app
-    # Add any other allowed origins here
-]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],  # You can restrict HTTP methods if needed (e.g., ["GET", "POST"])
-    allow_headers=["*"],  # You can restrict headers if needed
-)
+# origins = [
+#     "http://localhost",
+#     "http://localhost:3000",  # Replace with the address of your React app
+#     # Add any other allowed origins here
+# ]
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],  # You can restrict HTTP methods if needed (e.g., ["GET", "POST"])
+#     allow_headers=["*"],  # You can restrict headers if needed
+# )
 def pdf_to_text(pdf):
     pages = pdf2image.convert_from_bytes(pdf, poppler_path="poppler/bin")
     ocr = PaddleOCR(use_angle_cls=True, lang='en')
