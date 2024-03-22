@@ -63,11 +63,7 @@ async def upload_file(pdf_file: UploadFile):
     for img in os.listdir("output"):
         ocr_results = ocr_images(img, ocr)
         print(ocr_results)
-        # text_file_path = "output/" + img[:-4] + ".txt"
-        # with open(text_file_path, 'w') as f:
         results.append(ocr_results)
-        # for item in ocr_results:
-            # f.write("%s\n" % item)
         os.remove(os.path.join("output", img))
     return {"message": results}
 

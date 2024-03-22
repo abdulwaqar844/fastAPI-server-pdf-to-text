@@ -3,3 +3,4 @@ opencv_python_headless==4.7.0.72
 paddleocr==2.6.1.2
 pdf2image==1.16.0
 uvicorn
+PyMuPDF
