@@ -1,0 +1,56 @@
+name: Deploy to Digital Ocean
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Copy code to DigitalOcean
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.YOUR_EC2_HOST }}
+          username: ${{ secrets.YOUR_EC2_USERNAME }}
+          key: ${{ secrets.YOUR_SSH_PRIVATE_KEY }}
+          source: "."
+          target: "PdfToDocxBackend"
+
+      - name: Open ports on EC2
+        run: |
+          # Adjustthese commands based on your Droplet  's firewall settings
+          sudo ufw allow 8000
+          sudo ufw allow 80
+          sudo ufw allow 443
+      - name: Set PATH
+        run: |
+          echo 'export PATH="/home/ubuntu/.local/bin:$PATH"' >> $HOME/.bashrc
+          source $HOME/.bashrc
+      - name: SSH into EC2 and kill processes on ports 3000 and 8000
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.YOUR_EC2_HOST }}
+          username: ${{ secrets.YOUR_EC2_USERNAME }}
+          key: ${{ secrets.YOUR_SSH_PRIVATE_KEY }}
+          script: |
+            # Kill processes on port 3000 and 8000 (if they exist)
+            sudo kill -9 $(sudo lsof -t -i:8000)
+            sudo apt-get install -y tesseract-ocr
+            sudo apt-get install -y poppler-utils
+            
+            pip3 install paddleocr
+            pip3 install paddlepaddle
+            cd PdfToDocxBackend
+            pip3 install python-multipart
+            pip3 install -r requirements.txt
+            sudo apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+            pip3 install pillow==9.5.0
+            pip3 install torch==1.10.0+cpu torchvision==0.11.0+cpu torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html
+           
+            nohup python3 app.py > mylog.log 2>&1 &
