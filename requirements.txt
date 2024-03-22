@@ -1,5 +1,4 @@
 fastapi==0.103.1
-opencv_python_headless==4.7.0.72
 paddlepaddle==2.6.1
 paddleocr==2.6.1.2
 pdf2image==1.16.0
