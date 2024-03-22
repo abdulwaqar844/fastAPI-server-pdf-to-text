@@ -5,3 +5,4 @@ pdf2image==1.16.0
 uvicorn
 numpy==1.19.5
 Pillow
+paddlepaddle
