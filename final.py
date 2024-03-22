@@ -7,7 +7,6 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 app = FastAPI()
-
 # origins = [
 #     "http://localhost",
 #     "http://localhost:3000",  # Replace with the address of your React app
